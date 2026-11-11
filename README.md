@@ -5,6 +5,7 @@
 Detection of LLM-generated spam reviews on Amazon data, with a focus on generalization to unseen generators and control of dataset artifacts.
 
 ## Data
+This project is using only one dataset for now:
 
 [FraudSquad](https://arxiv.org/abs/2510.01801) (Liu et al., 2025), Amazon subset:
 
@@ -34,16 +35,6 @@ results/      evaluation results (CSV)
 | `baseline_check.ipynb` | Multi-seed evaluation, leave-one-generator-out, validation-based threshold, ablation (text normalization, length matching, word vs. char n-grams), top features, false positive/negative analysis |
 
 Model input is review text only. Metadata columns are excluded because they leak the label.
-
-## Results (TF-IDF + LR)
-
-| Setting | PR-AUC | Recall @ 1 % FPR |
-|---|---|---|
-| Same generator (train = test) | 0.988–0.996 | 0.993–0.999 |
-| Unseen generator, trained on 1 other | 0.791–0.975 | 0.731–0.966 |
-| Unseen generator, trained on 2 others (LOGO) | 0.925–0.978 | 0.896–0.976 |
-
-Mean over 3 seeds, raw text, word n-grams. Detailed per-run results: `results/baseline_02b.csv`.
 
 ## Requirements
 
