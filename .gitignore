@@ -1,0 +1,46 @@
+# --- Data (large; redistributing it may violate dataset licenses) ---
+data/
+*.csv
+*.parquet
+*.jsonl
+*.zip
+*.tar.gz
+
+# Keep small result tables (comment out if you'd rather not version them)
+!results/*.csv
+
+# --- Models / checkpoints (DistilBERT etc. later) ---
+models/
+checkpoints/
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.joblib
+*.pkl
+runs/
+wandb/
+mlruns/
+lightning_logs/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.env
+*.egg-info/
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+
+# --- Hugging Face / caches ---
+.cache/
+hf_cache/
+
+# --- OS / editors ---
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
