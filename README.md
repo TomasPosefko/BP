@@ -2,7 +2,7 @@
 
 *Detection of Synthetic Product Reviews and Bot-Driven Market Manipulation*: bachelor's project.
 
-Detection of machine-generated spam reviews on Amazon data, with a focus on generalization to unseen generators / domains and control of dataset artifacts.
+Detection of machine-generated spam reviews on multiple datasets.
 
 ## Data
 The data is not included in this repository (see `.gitignore`).
