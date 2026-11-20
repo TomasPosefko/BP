@@ -7,6 +7,12 @@ Detection of machine-generated spam reviews on multiple datasets.
 ## Data
 The data is not included in this repository (see `.gitignore`).
 
+| Dataset | Source |
+|---|---|
+| FraudSquad (Amazon subset) | [Dataset repository](https://anonymous.4open.science/r/FraudSquad-5389/) · [Paper](https://arxiv.org/abs/2510.01801) |
+| FRD (Fake Reviews Dataset) | [Dataset on OSF](https://osf.io/tyue9/) · [Authors' repository](https://github.com/joolsa/FakeReviews) |
+| Flowerly (Modern Fake Reviews) | [Dataset files and variants](https://github.com/PurplexyFlower/Fake-review#datasets) |
+
 ### FraudSquad
 [FraudSquad](https://arxiv.org/abs/2510.01801) (Liu et al., 2025), Amazon subset:
 
