@@ -31,13 +31,29 @@ Download it from [OSF](https://osf.io/tyue9/) and place it in:
 data/FRD/fake reviews dataset.csv
 ```
 
+### Flowerly (Modern Fake Reviews)
+
+The baseline uses the GPT-2 and LFM2.5-1.2B variants. Get the CSV files from the [Flowerly project](https://github.com/PurplexyFlower/Fake-review#datasets) and place them in:
+
+```
+data/Flowerly/modern_reviews_gpt2.csv
+data/Flowerly/modern_reviews_lfm.csv
+```
+
 ## Repository structure
 
 ```
-data/                       datasets (not versioned)
-notebooks/FraudSquad-Amazon/ notebooks for FraudSquad
-notebooks/FRD/              notebooks for FRD
-results/                    evaluation results (CSV)
+data/                         local dataset files
+├── FraudSquad-Data/Amazon/
+├── FRD/
+└── Flowerly/
+notebooks/
+├── FraudSquad-Amazon/         exploration, baselines, and detailed results
+├── FRD/                      exploration, baselines, and detailed results
+└── Flowerly/
+    └── basic_split_baseline.ipynb
+results/                      evaluation results (CSV)
+requirements.txt              Python dependencies
 ```
 
 ## Notebooks
@@ -62,50 +78,22 @@ Model input is review text only. Metadata columns are excluded because they leak
 
 Model input is review text only. FRD has no product or user IDs, so generalization is tested on unseen categories instead of unseen generators. The generated reviews contain strong formatting artifacts (truncation, joined sentences): an artifact-only model reaches ROC-AUC ~0.95, so results on the raw text overestimate detection of generated reviews.
 
+### Flowerly
+
+Flowerly is a working version with one notebook, [`basic_split_baseline.ipynb`](notebooks/Flowerly/basic_split_baseline.ipynb). Dataset exploration and robustness checks are still pending + more generators - DeepSeek and GLM.
+
 ## Results
 
-The tables summarize the saved evaluation runs. The datasets use different test protocols and metrics, so the scores are best interpreted within each dataset.
+All rows use word TF-IDF and logistic regression on raw review text. They report F1 for the synthetic class and ROC-AUC on held-out reviews from the same dataset and, where applicable, the same generator. Split protocols and F1 threshold rules differ by dataset.
 
-### FraudSquad (Amazon)
+| Dataset | Evaluation setup | F1 | ROC-AUC | Details |
+|---|---|---:|---:|---|
+| FraudSquad (Amazon) | Product-level split, mean across three generators and three seeds | 0.9638 | 0.9996 | [Detailed results](notebooks/FraudSquad-Amazon/README.md) |
+| FRD | Category × label stratified 70/15/15 split, mean across three seeds | 0.9289 | 0.9801 | [Detailed results](notebooks/FRD/README.md) |
+| Flowerly (GPT-2) | Label-stratified 80/20 split, seed 42 | 0.9326 | 0.9823 | [Baseline notebook](notebooks/Flowerly/basic_split_baseline.ipynb) |
+| Flowerly (LFM2.5-1.2B) | Label-stratified 80/20 split, seed 42 | 0.9908 | 0.9996 | [Baseline notebook](notebooks/Flowerly/basic_split_baseline.ipynb) |
 
-Word TF-IDF + logistic regression, with a product-level split and three seeds.
-
-| Training and test setup | Average precision | Recall at 1% FPR |
-|---|---:|---:|
-| Train and test on the same generator | 0.993 | 0.996 |
-| Train on one generator and test on a different one | 0.910 | 0.880 |
-| Train on two generators and test on the third | 0.953 | 0.939 |
-
-Performance drops on unseen generators. Training on two generators improves the average held-out result compared with training on one.
-
-[Detailed FraudSquad results](notebooks/FraudSquad-Amazon/README.md)
-
-### FRD
-
-ROC-AUC is averaged over three seeds for the stratified split and over ten held-out categories for leave-one-category-out evaluation.
-
-| Model and test setup | Raw text | Normalized, trimmed and length-matched |
-|---|---:|---:|
-| Word TF-IDF + logistic regression, stratified split | 0.980 | 0.972 |
-| Artifact-only baseline, stratified split | 0.948 | 0.843 |
-| Word TF-IDF + logistic regression, held-out category | 0.972 | 0.961 |
-
-Formatting and length alone carry substantial label signal. The word model retains high ROC-AUC after the controls and on held-out categories. Trimming and length matching change which reviews are evaluated, so the score differences combine text changes with changes in the test set.
-
-[Detailed FRD results](notebooks/FRD/README.md)
-
-### Flowerly (Modern Fake Reviews)
-
-This is a working version with an initial baseline for GPT-2 and LFM, DeepSeek and GLM will follow. Dataset exploration and robustness checks are still pending.
-
-Word TF-IDF + logistic regression, with a separate stratified 80/20 train/test split for each generator (seed 42).
-
-| Training and test generator | Accuracy | F1 | ROC-AUC |
-|---|---:|---:|---:|
-| GPT-2 | 0.934 | 0.933 | 0.9823 |
-| LFM2.5-1.2B | 0.991 | 0.991 | 0.9996 |
-
-Each detector was evaluated on held-out reviews from its training generator.
+The linked reports cover unseen-generator tests for FraudSquad and held-out categories and artifact controls for FRD.
 
 ### Result files
 
