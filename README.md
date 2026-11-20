@@ -64,12 +64,58 @@ Model input is review text only. FRD has no product or user IDs, so generalizati
 
 ## Results
 
+The tables summarize the saved evaluation runs. The datasets use different test protocols and metrics, so the scores are best interpreted within each dataset.
+
+### FraudSquad (Amazon)
+
+Word TF-IDF + logistic regression, with a product-level split and three seeds.
+
+| Training and test setup | Average precision | Recall at 1% FPR |
+|---|---:|---:|
+| Train and test on the same generator | 0.993 | 0.996 |
+| Train on one generator and test on a different one | 0.910 | 0.880 |
+| Train on two generators and test on the third | 0.953 | 0.939 |
+
+Performance drops on unseen generators. Training on two generators improves the average held-out result compared with training on one.
+
+[Detailed FraudSquad results](notebooks/FraudSquad-Amazon/README.md)
+
+### FRD
+
+ROC-AUC is averaged over three seeds for the stratified split and over ten held-out categories for leave-one-category-out evaluation.
+
+| Model and test setup | Raw text | Normalized, trimmed and length-matched |
+|---|---:|---:|
+| Word TF-IDF + logistic regression, stratified split | 0.980 | 0.972 |
+| Artifact-only baseline, stratified split | 0.948 | 0.843 |
+| Word TF-IDF + logistic regression, held-out category | 0.972 | 0.961 |
+
+Formatting and length alone carry substantial label signal. The word model retains high ROC-AUC after the controls and on held-out categories. Trimming and length matching change which reviews are evaluated, so the score differences combine text changes with changes in the test set.
+
+[Detailed FRD results](notebooks/FRD/README.md)
+
+### Flowerly (Modern Fake Reviews)
+
+This is a working version with an initial baseline for GPT-2 and LFM, DeepSeek and GLM will follow. Dataset exploration and robustness checks are still pending.
+
+Word TF-IDF + logistic regression, with a separate stratified 80/20 train/test split for each generator (seed 42).
+
+| Training and test generator | Accuracy | F1 | ROC-AUC |
+|---|---:|---:|---:|
+| GPT-2 | 0.934 | 0.933 | 0.9823 |
+| LFM2.5-1.2B | 0.991 | 0.991 | 0.9996 |
+
+Each detector was evaluated on held-out reviews from its training generator.
+
+### Result files
+
 | File | Notebook |
 |---|---|
 | `baseline_tfidf_lr.csv` | FraudSquad `split_baseline.ipynb` |
 | `baseline_02b.csv` | FraudSquad `baseline_check.ipynb` |
 | `frd_baseline.csv` | FRD `split_baseline.ipynb` |
 | `frd_baseline_02b.csv` | FRD `baseline_check.ipynb` |
+| [`flowerly_baseline.csv`](results/flowerly_baseline.csv) | [Flowerly `basic_split_baseline.ipynb`](notebooks/Flowerly/basic_split_baseline.ipynb) |
 
 ## Requirements
 
